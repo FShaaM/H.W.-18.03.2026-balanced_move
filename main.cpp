@@ -1,3 +1,6 @@
+#include <iostream>
+#include <exception>
+
 template< class T >
 struct List
 {
@@ -16,6 +19,9 @@ struct Vec
 template< class T >
 Vec< List< T >* > balanced_move(Vec< List< T >* > v, size_t k)
 {
+	if (k == 0 || v.s == 0)
+		return v;
+
 	size_t total = 0;
 	for (size_t i = 0; i < v.s; ++i)
 	{
@@ -31,12 +37,19 @@ Vec< List< T >* > balanced_move(Vec< List< T >* > v, size_t k)
 
 	List< T >** heads = nullptr;
 	List< T >** tails = nullptr;
+	try
+	{
+		List< T >** heads = new List< T >[col];
+		List< T >** tails = new List< T >[col];
 
-	List< T >** heads = new List< T >[col];
-	List< T >** tails = new List< T >[col];
-
-	for (size_t i = 0; i < new_count; ++i)
-	  heads[i] = tails[i] = nullptr;
+		for (size_t i = 0; i < col; ++i)
+			heads[i] = tails[i] = nullptr;
+	}
+	catch (std::bad_alloc&)
+	{
+		delete[] heads;
+		throw;
+	}
 
 	size_t processed = 0;
 	for (size_t i = 0; i < v.s; ++i)
@@ -77,3 +90,4 @@ Vec< List< T >* > balanced_move(Vec< List< T >* > v, size_t k)
 
 int main()
 {}
+
